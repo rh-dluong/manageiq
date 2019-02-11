@@ -4,11 +4,11 @@ require 'etc'
 require 'pg'
 require 'fileutils'
 
-timestamp = Time.new
-v = PG.library_version
+puts "Would you like to collect archive or current logs?"
 
-# Set log dump directory to tmp
-#collect_logs_directory = "/tmp/evm"
+timestamp = Time.new
+
+# set log collect directory
 collect_logs_directory = "/var/www/miq/vmdb"
 
 # eliminate any prior collected logs to make sure that only one collection is current
@@ -19,6 +19,7 @@ tarball = "log/evm_archive_#{Etc.uname[:nodename]}_#{timestamp.strftime('%Y%m%d_
 Dir.mkdir(collect_logs_directory) unless File.exists?(collect_logs_directory)
 Dir.chdir(collect_logs_directory) do
   if !ENV['APPLIANCE_PG_DATA'].nil? and File.directory?("#{ENV['APPLIANCE_PG_DATA']}/pg_log")
+    v = PG.library_version
     puts "This ManageIQ appliance has a Database server and is running version: psql (PostgreSQL) #{v / 10000}.#{(v % 10000) / 100}.#{(v % 100)}"
 
   else
